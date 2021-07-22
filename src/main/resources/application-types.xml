@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="FetchEmployeesMetaData" format="json">
+      <types:shape format="weave" example="examples/EmpMasterMetaData.json"><![CDATA[%dw 2.0
+
+type FetchEmployeesMetaData = Array<{|  emp_id: String,   emp_name: String,   emp_status: String,   emp_app_year: String,   emp_app_per: String,   emp_exp: String,   emp_salary: String,   emp_designation: String,   emp_age: String|}> {"example": "[{\\\"emp_id\\\":\\\"\\\",\\\"emp_name\\\":\\\"\\\",\\\"emp_status\\\":\\\"\\\",\\\"emp_app_year\\\":\\\"\\\",\\\"emp_app_per\\\":\\\"\\\",\\\"emp_exp\\\":\\\"\\\",\\\"emp_salary\\\":\\\"\\\",\\\"emp_designation\\\":\\\"\\\",\\\"emp_age\\\":\\\"\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="EmpHrMetaData" format="json">
+      <types:shape format="weave" example="examples/EmpHrMetaData.json"><![CDATA[%dw 2.0
+
+type EmpHrMetaData = {|
+  empID: Number {"typeId": "int"}, 
+  empName: String, 
+  empAddress: {|
+    housenumber: String, 
+    streetname: String, 
+    city: String, 
+    country: String
+  |}, 
+  empStatus: String, 
+  empJoinDate: String
+|} {"example": "{\\\"empID\\\":89898,\\\"empName\\\":\\\"Mitchel\\\",\\\"empAddress\\\":{\\\"housenumber\\\":\\\"2-1-8923-1\\\",\\\"streetname\\\":\\\"Central Avenue\\\",\\\"city\\\":\\\"New York\\\",\\\"country\\\":\\\"USA\\\"},\\\"empStatus\\\":\\\"A\\\",\\\"empJoinDate\\\":\\\"2020-06-08 08:43:12\\\"}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#6d41a0ad-2f2a-4309-84e5-2e42e98e279a">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="FetchEmployeesMetaData"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#8bf3355c-a9a1-4543-b50e-0f68722103d5">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="EmpHrMetaData"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="EmpHrMetaData"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>
