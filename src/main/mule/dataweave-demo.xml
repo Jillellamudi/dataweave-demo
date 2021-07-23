@@ -12,6 +12,16 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="47277e04-d1fe-400a-b190-db406293dd62" >
 		<db:my-sql-connection host="localhost" port="3306" user="root" password="root" database="muletrainingdb" />
 	</db:config>
+	<flow name="dataweave-ForEach" doc:id="02fbd449-7d97-495f-a8dc-1c82ee7c8209" >
+		<ee:transform doc:name="Transform Message" doc:id="3dc58d25-80a1-4d02-9118-5a8a18627847" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 	<flow name="dataweave-demoFlow" doc:id="4fee1292-803c-4a4f-9acd-fc4ac73da023" >
 		<ee:transform doc:name="Basic Dataweave" doc:id="54feb05a-9ed9-4256-acc0-d7bc72253c27" >
 			<ee:message >
