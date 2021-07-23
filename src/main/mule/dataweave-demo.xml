@@ -222,7 +222,7 @@ fun calExperience(joinDate) = daysBetween(payload[0].emp_join_date as LocalDateT
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="c03d43ac-9bff-430d-9c31-9c4d5a2caf48" message="employee is eligible -- #[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c03d43ac-9bff-430d-9c31-9c4d5a2caf48" message="Eligible Employees are........ #[payload]"/>
 	</flow>
 	<flow name="dataweave-demoFlow4" doc:id="6f85e7bf-157b-4493-9866-e554179a4878" >
 		<ee:transform doc:name="Dw String functions" doc:id="d66868e5-2050-457e-9d1c-08a49a4bdb36" >
