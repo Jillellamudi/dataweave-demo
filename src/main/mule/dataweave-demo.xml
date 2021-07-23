@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="642c915f-a4d2-4ab2-9fe2-e29db69c1381" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="47277e04-d1fe-400a-b190-db406293dd62" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="root" database="muletrainingdb" />
+	</db:config>
+	<flow name="dataweave-ForEach" doc:id="02fbd449-7d97-495f-a8dc-1c82ee7c8209" >
+		<ee:transform doc:name="Transform Message" doc:id="3dc58d25-80a1-4d02-9118-5a8a18627847" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow" doc:id="4fee1292-803c-4a4f-9acd-fc4ac73da023" >
+		<ee:transform doc:name="Basic Dataweave" doc:id="54feb05a-9ed9-4256-acc0-d7bc72253c27" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var emp = {
+	
+	id : 1,
+	name : "aishika",
+	adress : "hyd",
+	status : "A"
+}
+---
+{
+	empId : emp.id,
+	empName : emp.name,
+	empAddress : emp.adress,
+	empStatus : emp.status,
+	salary : 982657 as Number
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="1dcf6dcf-4ca3-41f3-b6aa-8ef85df4c259" message="#[payload]....EMP DETAILS"/>
+	</flow>
+	<flow name="dataweave-demoFlow1" doc:id="031e71ae-1df7-44ae-bcdf-87ffad47627b" >
+		<ee:transform doc:name="operators" doc:id="a72f768f-3db2-46cb-9153-aa8d24cd0d53" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var firstNumber = 20
+var secondNumber = 10
+var firstName = "Mule"
+var secondName = "ESB"
+var empNameArray = ["Raj","sekhar","abhay"]
+var empObject = {
+	empId : 1,
+	empName : "Rajasekhar",
+	empStatus : "A"
+}
+var empList = [{
+	empId : 2,
+	empName : "AbhayRam",
+	empStatus : "A"
+},
+{
+	empId : 3,
+	empName : "Aishika",
+	empStatus : "A"
+}]
+---
+[{
+"Arithmatic operators" : {
+	addition : firstNumber + secondNumber,
+	subtraction : firstNumber - secondNumber,
+	multiplication : firstNumber * secondNumber,
+	Division : firstNumber / secondNumber
+}
+},
+{
+	"comparisonOperators" : {
+		equalTo : firstNumber == secondNumber,
+		lessThan : firstNumber < secondNumber,
+		greateThan : firstNumber > secondNumber,
+		notEqualTo : firstNumber != secondNumber,
+		lessThanorEqualTo : firstNumber <= secondNumber,
+		greateThanorEqualTo : firstNumber >= secondNumber
+	}
+	
+},
+{
+	"++Operator" : {
+		fullName : firstName ++ " " ++ secondName,
+		empArray : empNameArray ++ ["chowdary"],
+		empPayload : empObject ++ {salary : 1234},
+		empListPayload : empList ++ [{
+			"empId": 4,
+          	"empName": "Archana",
+          	"empStatus": "I",
+          	"salary" : 1234
+		}]
+	}	
+},
+{
+	"--Operator" : {
+		empArray : empNameArray -- ["chowdary"],
+		empPayload : empObject -- {empStatus : "A"},
+		empListPayload : empList -- [{
+          "empId": 3,
+          "empName": "Aishika",
+          "empStatus": "A"
+        }]
+	}	
+}
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow2" doc:id="96de8328-0f15-482a-9586-2fc78ab51e78" >
+		<ee:transform doc:name="SimpleTypeCoercions" doc:id="b44420c9-fce1-4636-97f0-d47534f403cc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+var employee = {
+	empName : "kim kom",
+	empLocation : null,
+	empExperience : "5",
+	empExper : null,
+	isActive : "true"	
+}
+---
+{
+	empName : employee.empName as String,
+	empLocation : employee.empLocation as String default "",
+	empExp : employee.empExperience as Number,
+	empExp1 : employee.empExper as Number default 0,
+	isActive : employee.isActive as Boolean default false
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow3" doc:id="594aa45d-1b0b-4f42-9aeb-c757ffc22508" >
+		<ee:transform doc:name="Multiple Date Coercions" doc:id="4ae6dc6c-e591-4cfc-aa34-7a5b26e66505" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"todayDateTimeZone" : now(),
+	"todayDate" : now() as Date {format : "yyyy-MM-dd"},
+	"todayTime" : now() as Time {format : "HH:mm:ss"},
+	currentHour : now() as Time {format : "HH"},
+	currentDateTime : now() as LocalDateTime {format : "yyyy-MMM-dd HH:mm:ss.SSS"},
+	UTCTime : now() >> "UTC",
+	UTCISTTime : (now() >> "UTC" >> "IST"),
+	UTCISTTime1 : ((now() >> "UTC") >> "IST") as DateTime {format : "yyyy-MM-dd HH-mm-ss"},
+	ISTtime : now() >> "IST",
+	ESTtime : now() >> "EST",
+	Los_AngelsTime : now() >> "America/Los_Angeles",
+	CanadaCentral : now() >> "Canada/Central",
+	
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="FlowControlStatements" doc:id="ce5deece-2398-4cd9-82cf-899a5a74a07b" >
+		<ee:transform doc:name="FlowControlStatements" doc:id="db346822-c622-404b-90a2-35c135ddee25" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var country = "India"
+var city = ""
+---
+{
+	currency : if(country == "America") "USD" else if(country == "India") "INR" else "None",
+	city : if(city != null) city else ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="DataDwFunctions" doc:id="63bb39ac-ecae-478c-bd3e-642242594ffd" >
+		<ee:transform doc:name="Transform Message" doc:id="43fc1f39-75b1-4322-8eee-fb274b8681a7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	now: now(),
+	isleapYear : isLeapYear(|2016-10-01T23:01:00|),
+	isLeapYear : isLeapYear(|2017-10-01T23:01:00|),
+	days : daysBetween(|2016-10-01T23:01:00|,|2017-11-21T23:01:00|),
+	epochTime : now() as Number,
+	nanoseconds : now().nanoseconds,
+	milliseconds : now().milliseconds,
+	seconds : now().seconds,
+	minutes : now().minutes,
+	hours : now().hour,
+	day : now().day,
+	dayOfWeek : now().dayOfWeek,
+	dayOfYear : now().dayOfYear,
+	quarter : now().quarter,
+	year : now().year,
+	offSetSeconds : now().offsetSeconds
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="employeeGratuityChecking" doc:id="3dafb3e0-1700-4371-85dc-3235dc22688d" >
+		<http:listener doc:name="Listener" doc:id="51ec4de2-6ed6-4f6f-9bfc-607d8ff0476f" config-ref="HTTP_Listener_config" path="gratuity-eligibility"/>
+		<db:select doc:name="Select Employee By ID" doc:id="0c08afba-1338-48dd-8e8a-cc138ad7c543" config-ref="Database_Config">
+			<db:sql ><![CDATA[select emp_id,emp_name,emp_join_date from emp_master where emp_id=:emp_id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	emp_id: attributes.queryParams.empID
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="prepareResponse" doc:id="bc9081ba-7dc3-43e4-b5e1-06cd14ea0c15" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+fun calExperience(joinDate) = daysBetween(payload[0].emp_join_date as LocalDateTime {format: "yyyy-MM-dd HH:mm:ss"}, now() as LocalDateTime {format: "yyyy-MM-dd HH:mm:ss"}) / 365
+---
+{
+	empID : payload[0].emp_id,
+	empName : payload[0].emp_name,
+	empJoinDate : payload[0].emp_join_date,
+	empExperience : calExperience(payload[0].emp_join_date),
+	gratuity : if(calExperience((payload[0].emp_join_date)) > 5) "eligible" else "Not-Eligible" 
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="c03d43ac-9bff-430d-9c31-9c4d5a2caf48" message="employee is eligible -- #[payload]"/>
+	</flow>
+	<flow name="dataweave-demoFlow4" doc:id="6f85e7bf-157b-4493-9866-e554179a4878" >
+		<ee:transform doc:name="Dw String functions" doc:id="d66868e5-2050-457e-9d1c-08a49a4bdb36" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var name = "raj1"
+---
+{
+	"contains example" : "mulesoft" contains("mule"),
+	"find example" : "aaabcdefhja" find "a",
+	isBlankExample : isBlank(""),
+	"isEmpty Example Array" : isEmpty([1,2,3]),
+	"isEmpty Example String" : isEmpty(null),
+	"lower Example" : lower("MULEsoftEsb"),
+	"upper Example" : upper("muleSoftESB"),
+	"matches Example" : "mule@soft.com" matches(/([a-z]*)@([a-z]*).com/),
+	"replace Example" : "admin123" replace "123" with("_ID"),
+	"splitBy Example" : ("a-b-c" splitBy("-"))[-1],
+	"startswith Example" : "Marino" startsWith("Mar"),
+	"endwith Example" : "Marino" endsWith("no"),
+	"trim example" : trim(" abc def hkafano   "),
+	
+	"empName" : if(!isEmpty(name)) name else "Not provided"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow5" doc:id="0d56da22-bf59-486e-9d18-c48214713342" >
+		<ee:transform doc:name="Dw Math functions" doc:id="bae66421-b048-40bf-a241-5be8e548cd59" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"core-fun" : "abs - returns the absoulute value of a number",
+	"abs-num1" : abs(-2),
+	
+	"core-fun" : "avg - returns the average of numbers listed in an array ",
+	"avg-num1" : avg([1, 1000]),
+	"avg-num2" : avg([1,2,3]),
+	
+	"core-fun" : "ceil - Rounds a number upto the nearest whole number",
+	"ceil-num1" : ceil(1.5),
+	
+	"core-fun" : "floor - Rounds a number down to the nearest whole number",
+	"floor-num1" : floor(1.5),
+	
+	"core-fun" : "round - Rounds a number up or down to the nearest whole number",
+	"round-num1" : round(1.4),
+	"round-num2" : round(1.9),
+	
+	"core-fun" : "min - Returns the lowest comparable value in an array",
+	"min-num1" : min([1,1000]),
+	"min-num2" : min([1,3,2]),
+	"min-num3" : min([2.5,1.5,8.9]),
+	
+	"core-fun" : "minBy -  iterates over an array of objects to return the lowest value of comparable element",
+	"minBy-num1" : [ {"a" : 1},{"a" : 2},{"a":3} ] minBy (item) -> item.a,
+	
+	"core-fun" : "max - Returns the lowest comparable value in an array",
+	"max-num1" : max([1,1000]),
+	"max-num2" : max([1,3,2]),
+	"max-num3" : max([2.5,1.5,8.9]),
+	
+	"core-fun" : "maxBy -  iterates over an array of objects to return the lowest value of comparable element",
+	"maxBy-num1" : [ {"a" : 1},{"a" : 2},{"a":3} ] maxBy (item) -> item.a,
+	
+	"core-fun" : "isEven - Returns true if the given number is an integer (which lacks decimals), false",
+	"isEven-num1" : isEven(1.5),
+	"isEven-num2" : isEven(2),
+	"isEven-num3" : isEven(3),
+	
+	"core-fun" : "isOdd - Returns true if the number or numberic result of a mathematical operation is odd",
+	"isOdd-num1" : isOdd(1.5),
+	"isOdd-num2" : isOdd(2),
+	"isOdd-num3" : isOdd(3),
+	
+	"core-fun" : "isInteger - Returns true if the given is interger(which lacks decimals), false",
+	"isInteger-num1" : isInteger(1.1),
+	"isInteger-num1" : isInteger(12),
+	"isInteger-num1" : isInteger(13.1),
+	
+	"core-fun" : "isDecimal - Returns true if the given number contains a decimal, false if not",
+	"isDecimal-num1" : isDecimal(1.1),
+	"isDecimal-num1" : isDecimal(12),
+	"isDecimal-num1" : isDecimal(13.1)
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow6" doc:id="31549139-4ecf-4f57-be94-184e3de4846e" >
+		<ee:transform doc:name="Dw Of functions" doc:id="b46fc6ee-3054-407e-85ba-15b892615303" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var empName = "Aishika"
+var empSkills = ["skillA","skillB"] as Array
+var employee = {
+	empId:"991",
+	empName:"Abhay",
+	empStatus:"A"
+}
+var empployeeList=[
+	{
+		empId:"992",
+		empName:"Ram",
+		empStatus:"I"
+	},
+	{
+		empId:"993",
+		empName:"Rani",
+		empStatus:"A"
+	},
+	{
+		empId:"994",
+		empName:"chinni",
+		empStatus:"A"
+	}
+]
+---
+{
+	"sizeOf-FieldLevel" : sizeOf(empName),
+	"sizeOf-ArrayLevel" : sizeOf(empSkills),
+	"sizeOf-ObjectLevel" : sizeOf(employee),
+	"sizeOf-ArrayOfObjectLevel" : sizeOf(empployeeList),
+	"namesOfEmployeeObject" : namesOf(employee),
+	"entriesOfEmployeeObject" : entriesOf(employee),
+	"keysOfEmployeeObject" : keysOf(employee),
+	"valuesOfEmployeeObject" : valuesOf(employee)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="sizeOfOperatorUsage" doc:id="b1509acd-d83c-4616-b33e-93ec4ea5f85b" >
+		<http:listener doc:name="Listener" doc:id="6f5509b5-e39b-4e9b-a6aa-42946a311c4a" config-ref="HTTP_Listener_config" path="fetchEmpID"/>
+		<db:select doc:name="Select Employee By ID" doc:id="51617a71-da3d-442e-961c-225a85710770" config-ref="Database_Config" >
+			<db:sql ><![CDATA[select emp_id,emp_name,emp_join_date from emp_master where emp_id=:emp_id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	emp_id: attributes.queryParams.empID
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="prepareResponse sizeOf" doc:id="e6c7bb2f-5d9d-4acd-bd4a-310cd5d04f6c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+if(sizeOf(payload)>0){
+	empID : payload[0].emp_id,
+	empName : payload[0].emp_name,
+	empJoinDate : payload[0].emp_join_date,
+}else{
+	"message" : "Employee Not Found"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="DW-Mpa-MapObject-filter-FilterObject" doc:id="ed0bf39b-d689-4372-9059-70bdd107508c" >
+		<ee:transform doc:name="DW-Mpa-MapObject-filter-FilterObject" doc:id="3906af21-d76c-47e4-a03d-6c5ec527bf96" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var empList = [{
+	"empId": 100,
+	"empName": "aishu",
+	"empStatus": "A"
+},
+	{
+	"empId": 101,
+	"empName": "abhay",
+	"empStatus": "I"
+},
+	{
+	"empId": 100,
+	"empName": "chinni",
+	"empStatus": "A"
+},
+	{
+	"empId": 100,
+	"empName": "aishu",
+	"empStatus": "I"
+}]
+
+---
+empList[0] filterObject (($) == 100) mapObject ((empValue, empKey, indexOfEmp) -> {
+	(empKey) : empValue	
+})]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow7" doc:id="b4b6396e-39f0-4485-ab95-c7da1fbec559" >
+		<http:listener doc:name="Listener" doc:id="c80e8e5c-85ca-4441-80fc-865e0881eecf" config-ref="HTTP_Listener_config" path="fetchEmpMaster"/>
+		<db:select doc:name="Select" doc:id="2c776bac-2701-44fb-afec-c54f4345227b" config-ref="Database_Config">
+			<db:sql ><![CDATA[select emp_id, emp_name, emp_status, emp_app_year, emp_app_per, emp_exp, emp_salary, emp_designation, emp_age
+ from emp_appr_master]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="filter Manager" doc:id="6d41a0ad-2f2a-4309-84e5-2e42e98e279a">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload filter($.emp_designation == "Manager")map ( payload01 , indexOfPayload01 ) -> {
+	emp_id: payload01.emp_id as String default "",
+	emp_name: payload01.emp_name,
+	emp_status: payload01.emp_status,
+	emp_app_year: payload01.emp_app_year,
+	emp_app_per: payload01.emp_app_per as String,
+	emp_exp: payload01.emp_exp as String,
+	emp_salary: payload01.emp_salary as String,
+	emp_designation: payload01.emp_designation,
+	emp_age: payload01.emp_age as String
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="Dw-by-functions" doc:id="a41f8eb8-4a5a-4502-b798-4e7a5845f7ff" >
+		<ee:transform doc:name="distnictByOrderByGroupByJoinBy" doc:id="4e5ca706-e437-4825-99f3-09098c0373c9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var empList = [
+	{
+		"empId" : 100,
+		"empName" : "Raja",
+		"empStatus" : "A"
+	},
+	{
+		"empId" : 100,
+		"empName" : "Aishika",
+		"empStatus" : "A"
+	},
+	{
+		"empId" : 101,
+		"empName" : "sekhar",
+		"empStatus" : "I"
+	},
+	{
+		"empId" : 103,
+		"empName" : "chinni",
+		"empStatus" : "I"
+	},
+	{
+		"empId" : 102,
+		"empName" : "abhay",
+		"empStatus" : "A"
+	}
+]
+---
+{
+	"distnictByEmployees" : empList distinctBy ((item, index) -> item),
+	"orderByEmpAsc" : empList orderBy $.empId,
+	"orderByEmpDesc" : empList orderBy -$.empId,
+	"groupByEmpByStatus" : empList groupBy $.empStatus,
+	"inActiveEmp" : (empList filter($.empStatus == "I")).empId joinBy  ",",
+	"employees" : empList orderBy($.empId) distinctBy($.empId) map((emp,indexOfEmp)->{
+		"emp_id" : emp.empId,
+		"emp_name" : emp.empName,
+		"emp_status" : emp.empStatus
+	})
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dw-flatten" doc:id="af26d4c5-5aa8-4b18-b06e-cf525cc3846c" >
+		<ee:transform doc:name="flatten" doc:id="4663c94c-5a31-4e46-badc-00c2e3bdd7e1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var empList = [{
+	"empId": 100,
+	"empName": "Raja",
+	"empStatus": "A"
+},
+	{
+	"empId": 101,
+	"empName": "shika",
+	"empStatus": "A"
+},
+[{
+	"empId": 102,
+	"empName": "sekhar",
+	"empStatus": "I"
+},
+	{
+	"empId": 103,
+	"empName": "chinni",
+	"empStatus": "I"
+}]]
+---
+{
+	"employee" : flatten(empList)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="DwPluck" doc:id="49923fec-baed-4321-8617-ce31b22b5f0a" >
+		<ee:transform doc:name="Pluck" doc:id="9ce86450-7816-4c2d-89db-c9d24937e739" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var employee = {
+	"empId" : 100,
+	"empName" : "Chinna",
+	"empStatus" : "A"
+}
+---
+{
+	"keysOfEmployee" : employee pluck $$,
+	"valuesOfEmployee" : employee pluck $
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="dataweave-demoFlow8" doc:id="c1ebbe9f-1784-4e71-bfaf-142abb3ea478" >
+		<http:listener doc:name="Listener" doc:id="7e5eb424-be9d-4fc9-b0dc-beb6afdb567f" config-ref="HTTP_Listener_config" path="empHr"/>
+		<logger level="INFO" doc:name="Logger" doc:id="7f3f512d-c4ed-4ca4-ad00-a7ccdcbf0e3d" message="Start emp hr data insertion to database"/>
+		<ee:transform doc:name="Transform Message" doc:id="8bf3355c-a9a1-4543-b50e-0f68722103d5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"emp_id": payload.empID,
+	"emp_name": payload.empName,
+	"emp_address": payload.empAddress pluck $ joinBy ", ",
+	"emp_status": payload.empStatus,
+	"emp_join_date": payload.empJoinDate
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:insert doc:name="Insert MySql" doc:id="64e6caad-5645-44bf-af09-93f11a9b7103" config-ref="Database_Config">
+			<db:sql ><![CDATA[insert into muletrainingdb.emp_master (emp_id, emp_name, emp_address, emp_status, emp_join_date) values (:emp_id, :emp_name, :emp_address, :emp_status, :emp_join_date);]]></db:sql>
+			<db:input-parameters ><![CDATA[payload]]></db:input-parameters>
+		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="f70d23fa-0fb1-4b24-ba3b-43507cfc8b1d" message="completed HR emp flow"/>
+	</flow>
+</mule>
