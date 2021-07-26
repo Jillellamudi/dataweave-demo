@@ -45,7 +45,7 @@ var emp = {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Logger" doc:id="1dcf6dcf-4ca3-41f3-b6aa-8ef85df4c259" message="#[payload]....EMP DETAILS"/>
+		<logger level="INFO" doc:name="Logger" doc:id="1dcf6dcf-4ca3-41f3-b6aa-8ef85df4c259" message="employee details to be print...#[payload]"/>
 	</flow>
 	<flow name="dataweave-demoFlow1" doc:id="031e71ae-1df7-44ae-bcdf-87ffad47627b" >
 		<ee:transform doc:name="operators" doc:id="a72f768f-3db2-46cb-9153-aa8d24cd0d53" >
