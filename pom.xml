@@ -50,6 +50,7 @@
 								<region>us-east-1</region>
 								<workers>1</workers>
 								<workerType>MICRO</workerType>
+								<objectStoreV2>true</objectStoreV2>
 								<properties>
 									<env>Sandbox</env>
 								</properties>
